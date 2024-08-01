@@ -36,16 +36,6 @@ function reset() {
 function handleCancel() {
   reset()
 }
-
-function handleInput() {
-  if (!props.cell?.item) return
-
-  if (props.cell?.item?.count < deletedCount.value) {
-    deletedCount.value = lastValue.value
-  } else {
-    lastValue.value = deletedCount.value
-  }
-}
 </script>
 
 <template>
@@ -88,11 +78,7 @@ function handleInput() {
       <div v-if="showCounter" class="board-control__counter">
         <div>
           <AppFlex direction="column" gap="20px">
-            <AppInput
-              v-model="deletedCount"
-              placeholder="Введите количество"
-              @input="handleInput"
-            />
+            <AppInput v-model.number="deletedCount" placeholder="Введите количество" />
             <AppFlex gap="10px" justify="space-between">
               <AppButton style="height: 30px; width: 88px" @click="handleCancel">Отмена</AppButton>
               <AppButton
