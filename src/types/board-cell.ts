@@ -1,5 +1,4 @@
 export interface BoardCell {
   id: number
-  item: string | null
-  count: number
+  item: { src: string; count: number } | null
 }

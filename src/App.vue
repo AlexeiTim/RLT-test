@@ -4,43 +4,18 @@ import testIMG from '@/assets/test-img.png'
 import AppSkeleton from './components/common/AppSkeleton.vue'
 import ThemeProvider from './components/ThemeProvider.vue'
 import { useTheme } from './composables/useTheme'
-import GreenItem from '@/assets/green-item.png'
-import PrimaryItem from '@/assets/primary-item.png'
-import OrangeItem from '@/assets/orage-item.png'
-import CloseIcon from './components/icons/CloseIcon.vue'
+
 import BoardPanel from './components/BoardPanel.vue'
 import type { BoardCell } from './types/board-cell'
+import { useBoardStore } from './stores/board'
+import { storeToRefs } from 'pinia'
 
 const { toggleTheme } = useTheme()
+const boardStore = useBoardStore()
+const { cells } = storeToRefs(boardStore)
 
-const cells = ref<BoardCell[]>([
-  { id: 1, item: GreenItem, count: 4 },
-  { id: 2, item: PrimaryItem, count: 2 },
-  { id: 3, item: OrangeItem, count: 5 },
-  { id: 4, item: null, count: 0 },
-  { id: 5, item: null, count: 0 },
-  { id: 6, item: null, count: 0 },
-  { id: 7, item: null, count: 0 },
-  { id: 8, item: null, count: 0 },
-  { id: 9, item: null, count: 0 },
-  { id: 10, item: null, count: 0 },
-  { id: 11, item: null, count: 0 },
-  { id: 12, item: null, count: 0 },
-  { id: 13, item: null, count: 0 },
-  { id: 14, item: null, count: 0 },
-  { id: 15, item: null, count: 0 },
-  { id: 16, item: null, count: 0 },
-  { id: 17, item: null, count: 0 },
-  { id: 18, item: null, count: 0 },
-  { id: 19, item: null, count: 0 },
-  { id: 20, item: null, count: 0 },
-  { id: 21, item: null, count: 0 },
-  { id: 22, item: null, count: 0 },
-  { id: 23, item: null, count: 0 },
-  { id: 24, item: null, count: 0 },
-  { id: 25, item: null, count: 0 }
-])
 const showBoardControl = ref(false)
+
 const selectedCell = ref<BoardCell | null>(null)
 function dragStart(event: DragEvent, index: number) {
   if (!event.dataTransfer) return
@@ -54,20 +29,13 @@ function handleSelectCell(cell: BoardCell) {
   showBoardControl.value = true
 }
 
-function swapCells(prevIndex: number, nextIndex: number) {
-  ;[cells.value[prevIndex], cells.value[nextIndex]] = [
-    cells.value[nextIndex],
-    cells.value[prevIndex]
-  ]
-}
-
 function drop(event: DragEvent, index: number) {
   if (!event.dataTransfer) return
 
   const transferCellIndex = +event.dataTransfer.getData('dragbleCellIndex')
   if (typeof transferCellIndex !== 'number') return
 
-  swapCells(index, transferCellIndex)
+  boardStore.swapCells(index, transferCellIndex)
 }
 </script>
 
@@ -130,10 +98,10 @@ function drop(event: DragEvent, index: number) {
                 v-for="(cell, index) in cells"
                 :key="cell.id"
               >
-                <img v-if="cell.item" :src="cell.item" />
+                <img v-if="cell.item" :src="cell.item.src" />
                 <div v-if="cell.item" class="badge">
                   <span>
-                    {{ cell.count }}
+                    {{ cell.item.count }}
                   </span>
                 </div>
               </div>

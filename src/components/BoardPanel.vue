@@ -12,13 +12,14 @@ const props = defineProps<{
   cell: BoardCell
 }>()
 
-const show = defineModel<boolean>()
+const panel = ref()
+const show = defineModel<boolean>({ default: false })
 const showCounter = ref(false)
 </script>
 
 <template>
   <Transition name="fade">
-    <div v-if="show" class="board-control">
+    <div ref="panel" v-if="show" class="board-control">
       <div class="board-control__header">
         <div class="icon board-control__header_close" @click="show = false">
           <CloseIcon />
@@ -29,7 +30,7 @@ const showCounter = ref(false)
           <img
             class="content__img"
             v-if="props.cell.item"
-            :src="props.cell.item"
+            :src="props.cell.item.src"
             width="130"
             height="130"
           />
