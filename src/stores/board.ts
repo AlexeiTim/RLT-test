@@ -31,12 +31,20 @@ const INIT_CELLS: IBoardCell[] = [
   { id: 24, item: null },
   { id: 25, item: null }
 ]
+const INIT_COUNT = 5
+
 export const useBoardStore = defineStore('boardStore', () => {
   const savedCells = localStorage.getItem(CELLS_KEY)
   const selectedCell = ref<IBoardCell | null>(null)
+  const cells = ref<IBoardCell[]>(savedCells ? JSON.parse(savedCells) : INIT_CELLS)
+  if (!savedCells) saveCells()
 
   function setSelectedCell(cell: IBoardCell) {
     selectedCell.value = cell
+  }
+
+  function saveCells() {
+    localStorage.setItem(CELLS_KEY, JSON.stringify(cells.value))
   }
 
   function createCell(id: number) {
@@ -45,20 +53,18 @@ export const useBoardStore = defineStore('boardStore', () => {
 
     cells.value[cellIndex].item = {
       colors: generateTwoColors(),
-      count: 5
+      count: INIT_COUNT
     }
     setSelectedCell(cells.value[cellIndex])
-    localStorage.setItem(CELLS_KEY, JSON.stringify(cells.value))
+    saveCells()
   }
-
-  const cells = ref<IBoardCell[]>(savedCells ? JSON.parse(savedCells) : INIT_CELLS)
 
   function swapCells(prevIndex: number, nextIndex: number) {
     ;[cells.value[prevIndex], cells.value[nextIndex]] = [
       cells.value[nextIndex],
       cells.value[prevIndex]
     ]
-    localStorage.setItem(CELLS_KEY, JSON.stringify(cells.value))
+    saveCells()
   }
 
   function dicrementCellCount(id: number, count: number) {
@@ -68,7 +74,7 @@ export const useBoardStore = defineStore('boardStore', () => {
     if (cells.value[cellIndex].item.count <= 0) cells.value[cellIndex].item = null
 
     selectedCell.value = null
-    localStorage.setItem(CELLS_KEY, JSON.stringify(cells.value))
+    saveCells()
   }
   return {
     cells,

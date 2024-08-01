@@ -52,7 +52,6 @@ function dragOver(cell: IBoardCell) {
   <div class="board-wrapper">
     <div class="board">
       <div
-        ref="cell"
         draggable="true"
         @dragover.prevent="dragOver(cell)"
         @dragstart="($event) => dragStart($event, index)"
