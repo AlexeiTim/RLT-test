@@ -21,7 +21,18 @@ const styles = computed(() => ({
 </script>
 
 <style scoped lang="scss">
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 .root {
   background: var(--main-gradient);
+  background-size: 400% 100%;
+  animation: skeleton-loading 4s infinite linear;
 }
 </style>
