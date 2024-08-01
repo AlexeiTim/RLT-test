@@ -58,7 +58,7 @@ function dragOver(cell: IBoardCell) {
         @dragstart="($event) => dragStart($event, index)"
         @drop="($event) => drop($event, index)"
         @dragend="dragEnd"
-        class="board__cell draggble"
+        class="board__cell"
         :class="{ dragging: cell.id === activeCell?.id }"
         @click="handleSelectCell(cell)"
         v-for="(cell, index) in cells"
@@ -79,14 +79,6 @@ function dragOver(cell: IBoardCell) {
 </template>
 
 <style scoped lang="scss">
-.draggble {
-  transition: all 0.3s ease;
-  background-color: var(--bg-sub-color);
-}
-.dragging {
-  background-color: var(--success-color);
-}
-
 .cell {
   background: var(--bg-sub-color);
   &:hover {
@@ -121,6 +113,10 @@ function dragOver(cell: IBoardCell) {
     }
 
     &__cell {
+      transition: all 0.3s ease;
+      &.dragging {
+        background-color: var(--success-color);
+      }
       width: 100%;
       height: 100%;
       background-color: var(--bg-sub-color);
