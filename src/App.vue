@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ThemeProvider from './components/ThemeProvider.vue'
-import AppFooter from './components/common/AppFooter.vue'
+import AppFooter from './components/AppFooter.vue'
 import SideBar from './components/SideBar.vue'
 import AppBoard from './components/AppBoard.vue'
 </script>

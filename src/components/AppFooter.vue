@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import CloseIcon from '../icons/CloseIcon.vue'
 import AppSkeleton from './AppSkeleton.vue'
+import CloseIcon from './icons/CloseIcon.vue'
 </script>
 
 <template>

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { BoardCell } from '@/types/board-cell'
-import AppSkeleton from './common/AppSkeleton.vue'
+import AppSkeleton from './AppSkeleton.vue'
 import CloseIcon from './icons/CloseIcon.vue'
-import AppDriver from './common/AppDriver.vue'
-import AppFlex from './common/AppFlex.vue'
-import AppButton from './common/AppButton.vue'
-import AppInput from './common/AppInput.vue'
+import AppDriver from './AppDriver.vue'
+import AppFlex from './AppFlex.vue'
+import AppButton from './AppButton.vue'
+import AppInput from './AppInput.vue'
 import { ref } from 'vue'
 
 const props = defineProps<{

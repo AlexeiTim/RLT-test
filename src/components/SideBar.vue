@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import testIMG from '@/assets/test-img.png'
 import { useTheme } from '@/composables/useTheme'
-import AppSkeleton from './common/AppSkeleton.vue'
+import AppSkeleton from './AppSkeleton.vue'
 
 const { toggleTheme } = useTheme()
 </script>
