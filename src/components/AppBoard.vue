@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import BoardPanel from '@/components/BoardPanel.vue'
 import type { BoardCell } from '@/types/board-cell'
 import { useBoardStore } from '@/stores/board'
@@ -10,9 +10,12 @@ const { cells } = storeToRefs(boardStore)
 
 const showBoardControl = ref(false)
 
+const activeCell = ref<BoardCell | null>(null)
 const selectedCell = ref<BoardCell | null>(null)
+
 function dragStart(event: DragEvent, index: number) {
   if (!event.dataTransfer) return
+
   event.dataTransfer.setData('dragbleCellIndex', String(index))
 }
 
@@ -24,12 +27,21 @@ function handleSelectCell(cell: BoardCell) {
 }
 
 function drop(event: DragEvent, index: number) {
+  activeCell.value = null
   if (!event.dataTransfer) return
 
   const transferCellIndex = +event.dataTransfer.getData('dragbleCellIndex')
   if (typeof transferCellIndex !== 'number') return
 
   boardStore.swapCells(index, transferCellIndex)
+}
+
+function dragEnd() {
+  activeCell.value = null
+}
+
+function dragOver(cell: BoardCell) {
+  activeCell.value = cell
 }
 </script>
 
@@ -39,33 +51,39 @@ function drop(event: DragEvent, index: number) {
       <div
         ref="cell"
         draggable="true"
-        @dragover.prevent
+        @dragover.prevent="dragOver(cell)"
         @dragstart="($event) => dragStart($event, index)"
         @drop="($event) => drop($event, index)"
-        class="board__cell"
+        @dragend="dragEnd"
+        class="board__cell draggble"
+        :class="{ dragging: cell.id === activeCell?.id }"
         @click="handleSelectCell(cell)"
         v-for="(cell, index) in cells"
         :key="cell.id"
       >
-        <img v-if="cell.item" :src="cell.item.src" />
-        <div v-if="cell.item" class="badge">
-          <span>
+        <img draggable="false" v-if="cell.item" :src="cell.item.src" />
+        <div draggable="false" v-if="cell.item" class="badge">
+          <span draggable="false">
             {{ cell.item.count }}
           </span>
         </div>
       </div>
     </div>
-    <BoardPanel
-      :class="{ show: showBoardControl }"
-      class="panel"
-      v-if="selectedCell"
-      v-model="showBoardControl"
-      :cell="selectedCell"
-    />
+    <div :class="{ show: showBoardControl }" class="panel">
+      <BoardPanel v-model="showBoardControl" :cell="selectedCell" />
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
+.draggble {
+  transition: all 0.3s ease;
+  background-color: var(--bg-sub-color);
+}
+.dragging {
+  background-color: var(--success-color);
+}
+
 .panel {
   transition: all 0.4s ease;
   right: -250px;

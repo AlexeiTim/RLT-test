@@ -9,7 +9,7 @@ import AppInput from './AppInput.vue'
 import { ref } from 'vue'
 
 const props = defineProps<{
-  cell: BoardCell
+  cell: BoardCell | null
 }>()
 
 const panel = ref()
@@ -28,8 +28,8 @@ const showCounter = ref(false)
       <AppFlex align="center" justify="center">
         <img
           class="content__img"
-          v-if="props.cell.item"
-          :src="props.cell.item.src"
+          v-if="props.cell?.item"
+          :src="props.cell?.item.src"
           width="130"
           height="130"
         />
