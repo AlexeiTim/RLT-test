@@ -22,6 +22,7 @@ const lastValue = ref()
 
 function handleDicrementCount() {
   if (!props.cell?.item) return
+  if (Number.isNaN(+deletedCount.value)) return
 
   boardStore.dicrementCellCount(props.cell?.id, deletedCount.value)
   reset()
