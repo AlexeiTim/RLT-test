@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { nextTick, ref } from 'vue'
+import { ref } from 'vue'
 import BoardPanel from '@/components/BoardPanel.vue'
-import type { BoardCell } from '@/types/board-cell'
 import { useBoardStore } from '@/stores/board'
 import { storeToRefs } from 'pinia'
+import BoardCell from './BoardCell.vue'
+import type { IBoardCell } from '@/types/board-cell'
 
 const boardStore = useBoardStore()
 const { cells, selectedCell } = storeToRefs(boardStore)
 
 const showBoardControl = ref(false)
 
-const activeCell = ref<BoardCell | null>(null)
+const activeCell = ref<IBoardCell | null>(null)
 
 function dragStart(event: DragEvent, index: number) {
   if (!event.dataTransfer) return
@@ -18,11 +19,14 @@ function dragStart(event: DragEvent, index: number) {
   event.dataTransfer.setData('dragbleCellIndex', String(index))
 }
 
-function handleSelectCell(cell: BoardCell) {
-  if (!cell.item) return
+function handleSelectCell(cell: IBoardCell) {
+  if (cell.item) {
+    boardStore.setSelectedCell(cell)
+    showBoardControl.value = true
+    return
+  }
 
-  boardStore.setSelectedCell(cell)
-  showBoardControl.value = true
+  boardStore.createCell(cell.id)
 }
 
 function drop(event: DragEvent, index: number) {
@@ -39,7 +43,7 @@ function dragEnd() {
   activeCell.value = null
 }
 
-function dragOver(cell: BoardCell) {
+function dragOver(cell: IBoardCell) {
   activeCell.value = cell
 }
 </script>
@@ -60,12 +64,12 @@ function dragOver(cell: BoardCell) {
         v-for="(cell, index) in cells"
         :key="cell.id"
       >
-        <img draggable="false" v-if="cell.item" :src="cell.item.src" />
-        <div draggable="false" v-if="cell.item" class="badge">
-          <span draggable="false">
-            {{ cell.item.count }}
-          </span>
-        </div>
+        <BoardCell
+          v-if="cell.item"
+          :colors="cell.item.colors"
+          :count="cell.item.count"
+          draggable="false"
+        />
       </div>
     </div>
     <div :class="{ show: showBoardControl }" class="panel">
@@ -81,6 +85,13 @@ function dragOver(cell: BoardCell) {
 }
 .dragging {
   background-color: var(--success-color);
+}
+
+.cell {
+  background: var(--bg-sub-color);
+  &:hover {
+    background: red;
+  }
 }
 
 .panel {
@@ -104,19 +115,22 @@ function dragOver(cell: BoardCell) {
     grid-template-columns: repeat(5, 105px);
     grid-template-rows: repeat(5, 100px);
     overflow: hidden;
+
     &__panel {
       position: absolute;
     }
+
     &__cell {
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg-sub-color);
       cursor: pointer;
       position: relative;
       overflow: hidden;
       border: 1px solid var(--border-color);
-      padding: 23px 25px;
-      transition: all 0.4s easy;
 
       &:hover {
-        background-color: var(--bg-sub-color);
+        background-color: var(--bg-hover-color);
       }
     }
 
@@ -133,20 +147,5 @@ function dragOver(cell: BoardCell) {
       border-bottom-right-radius: 12px;
     }
   }
-}
-
-.badge {
-  position: absolute;
-  bottom: -1px;
-  right: -1px;
-  width: 16px;
-  height: 16px;
-  border-top-left-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border-color);
-  font-size: 10px;
-  color: var(--border-color);
 }
 </style>

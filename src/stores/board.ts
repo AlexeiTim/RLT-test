@@ -1,15 +1,13 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import GreenItem from '@/assets/green-item.png'
-import PrimaryItem from '@/assets/primary-item.png'
-import OrangeItem from '@/assets/orage-item.png'
-import type { BoardCell } from '@/types/board-cell'
+import { generateTwoColors } from '@/lib/generateColors'
+import type { IBoardCell } from '@/types/board-cell'
 const CELLS_KEY = 'cells'
 
-const INIT_CELLS = [
-  { id: 1, item: { src: GreenItem, count: 4 } },
-  { id: 2, item: { src: PrimaryItem, count: 2 } },
-  { id: 3, item: { src: OrangeItem, count: 5 } },
+const INIT_CELLS: IBoardCell[] = [
+  { id: 1, item: { colors: generateTwoColors(), count: 4 } },
+  { id: 2, item: { colors: generateTwoColors(), count: 2 } },
+  { id: 3, item: { colors: generateTwoColors(), count: 5 } },
   { id: 4, item: null },
   { id: 5, item: null },
   { id: 6, item: null },
@@ -35,13 +33,25 @@ const INIT_CELLS = [
 ]
 export const useBoardStore = defineStore('boardStore', () => {
   const savedCells = localStorage.getItem(CELLS_KEY)
-  const selectedCell = ref<BoardCell | null>(null)
+  const selectedCell = ref<IBoardCell | null>(null)
 
-  function setSelectedCell(cell: BoardCell) {
+  function setSelectedCell(cell: IBoardCell) {
     selectedCell.value = cell
   }
 
-  const cells = ref<BoardCell[]>(savedCells ? JSON.parse(savedCells) : INIT_CELLS)
+  function createCell(id: number) {
+    const cellIndex = cells.value.findIndex((c) => c.id === id)
+    if (cellIndex === -1) return
+
+    cells.value[cellIndex].item = {
+      colors: generateTwoColors(),
+      count: 5
+    }
+    setSelectedCell(cells.value[cellIndex])
+    localStorage.setItem(CELLS_KEY, JSON.stringify(cells.value))
+  }
+
+  const cells = ref<IBoardCell[]>(savedCells ? JSON.parse(savedCells) : INIT_CELLS)
 
   function swapCells(prevIndex: number, nextIndex: number) {
     ;[cells.value[prevIndex], cells.value[nextIndex]] = [
@@ -57,6 +67,7 @@ export const useBoardStore = defineStore('boardStore', () => {
     cells.value[cellIndex].item.count -= count
     if (cells.value[cellIndex].item.count <= 0) cells.value[cellIndex].item = null
 
+    selectedCell.value = null
     localStorage.setItem(CELLS_KEY, JSON.stringify(cells.value))
   }
   return {
@@ -64,6 +75,7 @@ export const useBoardStore = defineStore('boardStore', () => {
     selectedCell,
     setSelectedCell,
     swapCells,
-    dicrementCellCount
+    dicrementCellCount,
+    createCell
   }
 })

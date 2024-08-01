@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import type { BoardCell } from '@/types/board-cell'
 import AppSkeleton from './AppSkeleton.vue'
 import CloseIcon from './icons/CloseIcon.vue'
 import AppDriver from './AppDriver.vue'
 import AppFlex from './AppFlex.vue'
 import AppButton from './AppButton.vue'
 import AppInput from './AppInput.vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useBoardStore } from '@/stores/board'
+import type { IBoardCell } from '@/types/board-cell'
+import BoardCell from './BoardCell.vue'
 
 const props = defineProps<{
-  cell: BoardCell | null
+  cell: IBoardCell | null
 }>()
 const boardStore = useBoardStore()
 
@@ -37,6 +38,14 @@ function reset() {
 function handleCancel() {
   reset()
 }
+
+watch(
+  () => boardStore.selectedCell,
+  (newValue) => {
+    console.log(newValue?.item)
+    if (!newValue?.item) show.value = false
+  }
+)
 </script>
 
 <template>
@@ -47,15 +56,19 @@ function handleCancel() {
       </div>
     </div>
     <div class="board-control__content content">
-      <AppFlex align="center" justify="center">
-        <img
-          class="content__img"
-          v-if="props.cell?.item"
-          :src="props.cell?.item.src"
-          width="130"
-          height="130"
-        />
-      </AppFlex>
+      <div class="cell-wrapper">
+        <AppFlex align="center" justify="center">
+          <BoardCell
+            style="margin-bottom: 30px"
+            width="130px"
+            height="130px"
+            v-if="props.cell?.item"
+            :colors="props.cell.item.colors"
+            :count="props.cell.item.count"
+            hideCount
+          />
+        </AppFlex>
+      </div>
 
       <AppDriver style="margin-bottom: 16px" />
       <AppFlex direction="column" align="center" gap="24px">
@@ -102,7 +115,14 @@ function handleCancel() {
   filter: blur(4px);
 }
 
+.cell-wrapper {
+  width: 100%;
+  height: 100%;
+  background-color: inherit;
+}
+
 .board-control {
+  z-index: 10;
   align-items: center;
   padding: 55px 15px 18px;
   position: absolute;

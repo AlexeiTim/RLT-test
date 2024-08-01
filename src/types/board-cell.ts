@@ -1,4 +1,4 @@
-export interface BoardCell {
+export interface IBoardCell {
   id: number
-  item: { src: string; count: number } | null
+  item: { colors: [string, string]; count: number } | null
 }
