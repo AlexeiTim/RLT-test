@@ -7,10 +7,13 @@ import { useTheme } from './composables/useTheme'
 import GreenItem from '@/assets/green-item.png'
 import PrimaryItem from '@/assets/primary-item.png'
 import OrangeItem from '@/assets/orage-item.png'
+import CloseIcon from './components/icons/CloseIcon.vue'
+import BoardPanel from './components/BoardPanel.vue'
+import type { BoardCell } from './types/board-cell'
 
 const { toggleTheme } = useTheme()
 
-const cells = ref([
+const cells = ref<BoardCell[]>([
   { id: 1, item: GreenItem, count: 4 },
   { id: 2, item: PrimaryItem, count: 2 },
   { id: 3, item: OrangeItem, count: 5 },
@@ -37,10 +40,18 @@ const cells = ref([
   { id: 24, item: null, count: 0 },
   { id: 25, item: null, count: 0 }
 ])
-
+const showBoardControl = ref(false)
+const selectedCell = ref<BoardCell | null>(null)
 function dragStart(event: DragEvent, index: number) {
   if (!event.dataTransfer) return
   event.dataTransfer.setData('dragbleCellIndex', String(index))
+}
+
+function handleSelectCell(cell: BoardCell) {
+  if (!cell.item) return
+
+  selectedCell.value = cell
+  showBoardControl.value = true
 }
 
 function swapCells(prevIndex: number, nextIndex: number) {
@@ -106,24 +117,28 @@ function drop(event: DragEvent, index: number) {
               <AppSkeleton width="80px" height="10px" rounded="8px" class="skeletons__footer" />
             </div>
           </div>
-          <div class="board">
-            <div
-              ref="cell"
-              draggable="true"
-              @dragover.prevent
-              @dragstart="($event) => dragStart($event, index)"
-              @drop="($event) => drop($event, index)"
-              class="board__cell"
-              v-for="(cell, index) in cells"
-              :key="cell.id"
-            >
-              <img v-if="cell.item" :src="cell.item" />
-              <div v-if="cell.item" class="badge">
-                <span>
-                  {{ cell.count }}
-                </span>
+          <div class="board-wrapper">
+            <div class="board">
+              <div
+                ref="cell"
+                draggable="true"
+                @dragover.prevent
+                @dragstart="($event) => dragStart($event, index)"
+                @drop="($event) => drop($event, index)"
+                class="board__cell"
+                @click="handleSelectCell(cell)"
+                v-for="(cell, index) in cells"
+                :key="cell.id"
+              >
+                <img v-if="cell.item" :src="cell.item" />
+                <div v-if="cell.item" class="badge">
+                  <span>
+                    {{ cell.count }}
+                  </span>
+                </div>
               </div>
             </div>
+            <BoardPanel v-if="selectedCell" v-model="showBoardControl" :cell="selectedCell" />
           </div>
         </main>
         <footer class="footer">2</footer>
@@ -135,6 +150,44 @@ function drop(event: DragEvent, index: number) {
 <style scoped lang="scss">
 .app {
   background-color: var(--bg-color);
+}
+.board-wrapper {
+  position: relative;
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(5, 105px);
+    grid-template-rows: repeat(5, 100px);
+    overflow: hidden;
+    &__panel {
+      position: absolute;
+    }
+    &__cell {
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      padding: 23px 25px;
+      transition: all 0.4s easy;
+
+      &:hover {
+        background-color: var(--bg-sub-color);
+      }
+    }
+
+    &__cell:nth-child(1) {
+      border-top-left-radius: 12px;
+    }
+    &__cell:nth-child(5) {
+      border-top-right-radius: 12px;
+    }
+    &__cell:nth-child(21) {
+      border-bottom-left-radius: 12px;
+    }
+    &__cell:nth-child(25) {
+      border-bottom-right-radius: 12px;
+    }
+  }
 }
 
 .skeletons {
@@ -180,39 +233,6 @@ function drop(event: DragEvent, index: number) {
   border: 1px solid var(--border-color);
   font-size: 10px;
   color: var(--border-color);
-}
-
-.board {
-  display: grid;
-  grid-template-columns: repeat(5, 105px);
-  grid-template-rows: repeat(5, 100px);
-  overflow: hidden;
-
-  &__cell {
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-    padding: 23px 25px;
-    transition: all 0.4s easy;
-
-    &:hover {
-      background-color: var(--bg-sub-color);
-    }
-  }
-
-  &__cell:nth-child(1) {
-    border-top-left-radius: 12px;
-  }
-  &__cell:nth-child(5) {
-    border-top-right-radius: 12px;
-  }
-  &__cell:nth-child(21) {
-    border-bottom-left-radius: 12px;
-  }
-  &__cell:nth-child(25) {
-    border-bottom-right-radius: 12px;
-  }
 }
 
 .footer {

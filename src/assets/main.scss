@@ -1,4 +1,6 @@
+@import 'reset';
 @import 'variables';
+@import 'fonts';
 
 * {
   box-sizing: border-box;
@@ -27,4 +29,10 @@
 
 .test {
   border: 1px solid black;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
