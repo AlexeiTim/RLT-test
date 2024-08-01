@@ -35,6 +35,12 @@ const INIT_CELLS = [
 ]
 export const useBoardStore = defineStore('boardStore', () => {
   const savedCells = localStorage.getItem(CELLS_KEY)
+  const selectedCell = ref<BoardCell | null>(null)
+
+  function setSelectedCell(cell: BoardCell) {
+    selectedCell.value = cell
+  }
+
   const cells = ref<BoardCell[]>(savedCells ? JSON.parse(savedCells) : INIT_CELLS)
 
   function swapCells(prevIndex: number, nextIndex: number) {
@@ -44,8 +50,22 @@ export const useBoardStore = defineStore('boardStore', () => {
     ]
     localStorage.setItem(CELLS_KEY, JSON.stringify(cells.value))
   }
+
+  function dicrementCellCount(id: number, count: number) {
+    const cellIndex = cells.value.findIndex((c) => c.id === id)
+    if (cellIndex !== -1) {
+      if (!cells.value[cellIndex].item) return
+      console.log(cells.value[cellIndex].item.count)
+      cells.value[cellIndex].item.count -= count
+      console.log(cells.value[cellIndex].item.count)
+    }
+    localStorage.setItem(CELLS_KEY, JSON.stringify(cells.value))
+  }
   return {
     cells,
-    swapCells
+    selectedCell,
+    setSelectedCell,
+    swapCells,
+    dicrementCellCount
   }
 })

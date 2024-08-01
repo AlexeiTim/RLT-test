@@ -6,12 +6,11 @@ import { useBoardStore } from '@/stores/board'
 import { storeToRefs } from 'pinia'
 
 const boardStore = useBoardStore()
-const { cells } = storeToRefs(boardStore)
+const { cells, selectedCell } = storeToRefs(boardStore)
 
 const showBoardControl = ref(false)
 
 const activeCell = ref<BoardCell | null>(null)
-const selectedCell = ref<BoardCell | null>(null)
 
 function dragStart(event: DragEvent, index: number) {
   if (!event.dataTransfer) return
@@ -22,7 +21,7 @@ function dragStart(event: DragEvent, index: number) {
 function handleSelectCell(cell: BoardCell) {
   if (!cell.item) return
 
-  selectedCell.value = cell
+  boardStore.setSelectedCell(cell)
   showBoardControl.value = true
 }
 

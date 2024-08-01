@@ -7,14 +7,40 @@ import AppFlex from './AppFlex.vue'
 import AppButton from './AppButton.vue'
 import AppInput from './AppInput.vue'
 import { ref } from 'vue'
+import { useBoardStore } from '@/stores/board'
 
 const props = defineProps<{
   cell: BoardCell | null
 }>()
+const boardStore = useBoardStore()
 
 const panel = ref()
 const show = defineModel<boolean>({ default: false })
 const showCounter = ref(false)
+const deletedCount = ref()
+const lastValue = ref()
+
+function handleDicrementCount() {
+  if (!props.cell?.item) return
+
+  boardStore.dicrementCellCount(props.cell?.id, deletedCount.value)
+}
+
+function handleCancel() {
+  deletedCount.value = ''
+  lastValue.value = ''
+  showCounter.value = false
+}
+
+function handleInput() {
+  if (!props.cell?.item) return
+
+  if (props.cell?.item?.count < deletedCount.value) {
+    deletedCount.value = lastValue.value
+  } else {
+    lastValue.value = deletedCount.value
+  }
+}
 </script>
 
 <template>
@@ -57,12 +83,18 @@ const showCounter = ref(false)
       <div v-if="showCounter" class="board-control__counter">
         <div>
           <AppFlex direction="column" gap="20px">
-            <AppInput placeholder="Введите количество" />
+            <AppInput
+              v-model="deletedCount"
+              placeholder="Введите количество"
+              @input="handleInput"
+            />
             <AppFlex gap="10px" justify="space-between">
-              <AppButton style="height: 30px; width: 88px" @click="showCounter = false"
-                >Отмена</AppButton
-              >
-              <AppButton class="board-contro__counter_confirm" style="height: 30px" variant="danger"
+              <AppButton style="height: 30px; width: 88px" @click="handleCancel">Отмена</AppButton>
+              <AppButton
+                class="board-contro__counter_confirm"
+                style="height: 30px"
+                variant="danger"
+                @click="handleDicrementCount"
                 >Подтвердить</AppButton
               >
             </AppFlex>
