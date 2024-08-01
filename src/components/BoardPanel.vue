@@ -24,12 +24,17 @@ function handleDicrementCount() {
   if (!props.cell?.item) return
 
   boardStore.dicrementCellCount(props.cell?.id, deletedCount.value)
+  reset()
 }
 
-function handleCancel() {
+function reset() {
   deletedCount.value = ''
   lastValue.value = ''
   showCounter.value = false
+}
+
+function handleCancel() {
+  reset()
 }
 
 function handleInput() {
