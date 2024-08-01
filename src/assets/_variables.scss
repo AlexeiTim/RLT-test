@@ -1,0 +1,39 @@
+$light-primary: blue;
+$light-secondary: gray;
+$light-danger: red;
+$light-warning: orange;
+
+$dark-primary: rgb(0, 0, 71);
+$dark-secondary: rgb(54, 54, 54);
+$dark-danger: rgb(68, 0, 0);
+$dark-warning: rgb(107, 70, 0);
+
+// Светлая тема
+.light {
+  --border-color: #cfcbcb;
+  --danger-color: #f89a9a;
+  --danger-hover-color: #b36a6a;
+  --bg-color: #c9c9c9;
+  --bg-sub-color: #999999;
+  --success-color: #5adf08;
+  --success-sub-color: rgba(184, 217, 155, 0.35);
+  --warning-color: yellow;
+  --warning-sub-color: rgb(151, 151, 4);
+  --main-gradient: linear-gradient(to right, #e01515 0%, #740505 51%, #440101 100%);
+}
+
+// Темная тема
+.dark {
+  --border-color: #4d4d4d;
+  --danger-color: #fa7272;
+  --danger-hover-color: #ff8888;
+  --bg-color: #1d1d1d;
+  --bg-sub-color: #262626;
+  --success-color: #7faa65;
+  --success-sub-color: rgba(184, 217, 152, 0.35);
+  --warning-color: rgb(177, 177, 24);
+  --warning-sub-color: rgb(121, 121, 2);
+  --primary-color: blue;
+  --primary-sub-color: rgb(2, 2, 153);
+  --main-gradient: linear-gradient(to right, #3c3c3c 0%, #444444 51%, #333333 100%);
+}
