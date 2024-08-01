@@ -23,14 +23,12 @@ const props = defineProps<{
           backgroundColor: props.colors[0]
         }"
       ></div>
-      <div class="cell-back">
-        <div
-          class="cell__item-2"
-          :style="{
-            backgroundColor: props.colors[1]
-          }"
-        ></div>
-      </div>
+      <div
+        class="cell__item-2"
+        :style="{
+          backgroundColor: props.colors[1]
+        }"
+      ></div>
     </div>
     <div v-show="!props.hideCount" class="badge">
       <span draggable="false">
@@ -42,14 +40,6 @@ const props = defineProps<{
 
 <style scoped lang="scss">
 .root {
-  // .cell-back {
-  //   position: absolute;
-  //   right: 0;
-  //   width: 90%;
-  //   height: 90%;
-  //   top: 0;
-  //   backdrop-filter: blur(16px);
-  // }
   position: relative;
   display: flex;
   height: 100%;
