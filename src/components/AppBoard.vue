@@ -113,9 +113,6 @@ function dragOver(cell: IBoardCell) {
 
     &__cell {
       transition: all 0.3s ease;
-      &.dragging {
-        background-color: var(--success-color);
-      }
       width: 100%;
       height: 100%;
       background-color: var(--bg-sub-color);
@@ -123,6 +120,10 @@ function dragOver(cell: IBoardCell) {
       position: relative;
       overflow: hidden;
       border: 1px solid var(--border-color);
+
+      &.dragging {
+        background-color: var(--success-color);
+      }
 
       &:hover {
         background-color: var(--bg-hover-color);

@@ -69,9 +69,13 @@ export const useBoardStore = defineStore('boardStore', () => {
 
   function dicrementCellCount(id: number, count: number) {
     const cellIndex = cells.value.findIndex((c) => c.id === id)
-    if (cellIndex === -1 || !cells.value[cellIndex].item) return
-    cells.value[cellIndex].item.count -= count
-    if (cells.value[cellIndex].item.count <= 0) cells.value[cellIndex].item = null
+    if (cellIndex === -1) return
+
+    const item = cells.value[cellIndex].item
+    if (!item) return
+
+    item.count -= count
+    if (item?.count <= 0) cells.value[cellIndex].item = null
 
     selectedCell.value = null
     saveCells()
