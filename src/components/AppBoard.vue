@@ -55,12 +55,31 @@ function drop(event: DragEvent, index: number) {
         </div>
       </div>
     </div>
-    <BoardPanel v-if="selectedCell" v-model="showBoardControl" :cell="selectedCell" />
+    <BoardPanel
+      :class="{ show: showBoardControl }"
+      class="panel"
+      v-if="selectedCell"
+      v-model="showBoardControl"
+      :cell="selectedCell"
+    />
   </div>
 </template>
 
 <style scoped lang="scss">
+.panel {
+  transition: all 0.4s ease;
+  right: -250px;
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+
+.panel.show {
+  right: 0;
+}
+
 .board-wrapper {
+  overflow: hidden;
   position: relative;
 
   .board {

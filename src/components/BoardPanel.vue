@@ -18,64 +18,59 @@ const showCounter = ref(false)
 </script>
 
 <template>
-  <Transition name="fade">
-    <div ref="panel" v-if="show" class="board-control">
-      <div class="board-control__header">
-        <div class="icon board-control__header_close" @click="show = false">
-          <CloseIcon />
-        </div>
+  <div ref="panel" class="board-control">
+    <div class="board-control__header">
+      <div class="icon board-control__header_close" @click="show = false">
+        <CloseIcon />
       </div>
-      <div class="board-control__content content">
-        <AppFlex align="center" justify="center">
-          <img
-            class="content__img"
-            v-if="props.cell.item"
-            :src="props.cell.item.src"
-            width="130"
-            height="130"
-          />
-        </AppFlex>
-
-        <AppDriver style="margin-bottom: 16px" />
-        <AppFlex direction="column" align="center" gap="24px">
-          <AppSkeleton rounded="8px" width="211px" height="30px" />
-          <AppFlex direction="column" align="center" gap="16px">
-            <AppSkeleton rounded="4px" width="211px" height="10px" />
-            <AppSkeleton rounded="4px" width="211px" height="10px" />
-            <AppSkeleton rounded="4px" width="211px" height="10px" />
-            <AppSkeleton rounded="4px" width="180px" height="10px" />
-            <AppSkeleton rounded="4px" width="80px" height="10px" />
-          </AppFlex>
-          <AppDriver />
-        </AppFlex>
-      </div>
-      <div class="board-control__footer">
-        <AppButton :class="{ blur: showCounter }" @click="showCounter = true" variant="danger">
-          <span>Удалить предмет</span>
-        </AppButton>
-      </div>
-      <Transition name="fade">
-        <div v-if="showCounter" class="board-control__counter">
-          <div>
-            <AppFlex direction="column" gap="20px">
-              <AppInput placeholder="Введите количество" />
-              <AppFlex gap="10px" justify="space-between">
-                <AppButton style="height: 30px; width: 88px" @click="showCounter = false"
-                  >Отмена</AppButton
-                >
-                <AppButton
-                  class="board-contro__counter_confirm"
-                  style="height: 30px"
-                  variant="danger"
-                  >Подтвердить</AppButton
-                >
-              </AppFlex>
-            </AppFlex>
-          </div>
-        </div>
-      </Transition>
     </div>
-  </Transition>
+    <div class="board-control__content content">
+      <AppFlex align="center" justify="center">
+        <img
+          class="content__img"
+          v-if="props.cell.item"
+          :src="props.cell.item.src"
+          width="130"
+          height="130"
+        />
+      </AppFlex>
+
+      <AppDriver style="margin-bottom: 16px" />
+      <AppFlex direction="column" align="center" gap="24px">
+        <AppSkeleton rounded="8px" width="211px" height="30px" />
+        <AppFlex direction="column" align="center" gap="16px">
+          <AppSkeleton rounded="4px" width="211px" height="10px" />
+          <AppSkeleton rounded="4px" width="211px" height="10px" />
+          <AppSkeleton rounded="4px" width="211px" height="10px" />
+          <AppSkeleton rounded="4px" width="180px" height="10px" />
+          <AppSkeleton rounded="4px" width="80px" height="10px" />
+        </AppFlex>
+        <AppDriver />
+      </AppFlex>
+    </div>
+    <div class="board-control__footer">
+      <AppButton :class="{ blur: showCounter }" @click="showCounter = true" variant="danger">
+        <span>Удалить предмет</span>
+      </AppButton>
+    </div>
+    <Transition name="fade">
+      <div v-if="showCounter" class="board-control__counter">
+        <div>
+          <AppFlex direction="column" gap="20px">
+            <AppInput placeholder="Введите количество" />
+            <AppFlex gap="10px" justify="space-between">
+              <AppButton style="height: 30px; width: 88px" @click="showCounter = false"
+                >Отмена</AppButton
+              >
+              <AppButton class="board-contro__counter_confirm" style="height: 30px" variant="danger"
+                >Подтвердить</AppButton
+              >
+            </AppFlex>
+          </AppFlex>
+        </div>
+      </div>
+    </Transition>
+  </div>
 </template>
 
 <style scoped lang="scss">
